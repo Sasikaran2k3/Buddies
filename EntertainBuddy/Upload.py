@@ -103,33 +103,5 @@ while True:
             break
     else:
         print("Published Successfully")
-        browser.quit()
+        browser.close()
         break
-"""
-f = open(os.path.dirname(__file__) + "/Data/" + date + ".txt", "r")
-content = f.readlines()
-print(content)
-title = content[0]
-desc = content[1]
-link = content[2]
-data = os.path.dirname(__file__) + "/" + date + ".mp4"
-my_hash = " #Entertainbuddy #technology #gadget #gadgetnews "
-yt_hashtags = my_hash #" ".join(["#"+i.text for i in hash_result]) + my_hash
-browser.get("https://www.instagram.com/")
-browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="New post"]').click()
-browser.find_element(By.XPATH, '//button[text()="Select from computer"]').click()
-time.sleep(5)
-pyautogui.typewrite(data.replace("/", '\\')+"\n")
-browser.f
-quit()
-browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="Select crop"]').click()
-browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="Crop portrait icon"]').click()
-browser.find_element(By.XPATH, '//div[text()="Next"]').click()
-time.sleep(3)
-browser.find_element(By.XPATH, '//div[text()="Next"]').click()
-print(desc+link+yt_hashtags)
-act = ActionChains(browser)
-act.move_to_element((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
-act.double_click()
-#act.click((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
-"""

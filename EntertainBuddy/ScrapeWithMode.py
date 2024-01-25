@@ -30,7 +30,7 @@ def StartScrape(mode):
             url = check.get_attribute("src")
             print(img_desc)
             additional_images(img_desc)
-            browser.quit()
+            browser.close()
             time.sleep(2)
             file = open(os.path.dirname(__file__) + "/Data/" + "%s.txt" % (date), "w")
             file.write(title + "\n" + link)
@@ -45,7 +45,7 @@ def StartScrape(mode):
                 print("Scrap Error")
                 break
         else:
-            browser.quit()
+            browser.close()
             print("\nScrap Successful\n")
             break
 
@@ -109,7 +109,7 @@ if len(my_full_news_data) == 2:
         f.writelines(my_full_news_data)
     additional_images(my_full_news_data[0], 1)
     my_full_news.truncate(0)
-    browser.quit()
+    browser.close()
 elif my_news_link_data != []:
     print("selected scrap")
     StartScrape("S")

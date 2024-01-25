@@ -12,7 +12,7 @@ def Start_Lap(browser_name="EntertainBuddy"):
     # CMD prompt is google-chrome --remote-debugging-port=1135 --user-data-dir="/home/sasi/PycharmProjects/EntertainBuddy/EntertainBuddy"
     path_of_browser = os.path.dirname(__file__) + '/%s' % browser_name
     print(path_of_browser)
-    #opt.add_argument("--remote-debugging-port=1133")
+    os.system("gnome-terminal -e 'google-chrome --remote-debugging-port=1133 --user-data-dir=\"/home/sasi/PycharmProjects/EntertainBuddy/EntertainBuddy\"'")
     opt.add_argument(r'--user-data-dir=%s'%path_of_browser)
     services = Service(executable_path=os.path.dirname(__file__) + "/chromedriver")
     browser = Chrome(service=services, options=opt)
