@@ -43,7 +43,7 @@ def Talk_to_Rytr(prompt):
     base_path = os.path.dirname(__file__) + "/Data/" + date
 
     # Large nested If Else for selecting classifying prompt
-    path = base_path+".txt" if "title" in prompt else base_path+"_meme.txt" if "meme" in prompt else base_path+"_hash.txt" if "hash" in prompt else base_path+"_hook.txt" if "ignorance" in prompt else base_path+"_script.txt"
+    path = base_path+".txt" if "title" in prompt else base_path+"_meme.txt" if "meme" in prompt else base_path+"_hash.txt" if "hash" in prompt else base_path+"_hook.txt" if "hook" in prompt else base_path+"_script.txt"
     print("Info :", instance_prompt, prompt,path)
 
     # Chat is entire convo and dialog is particular dialog
@@ -75,11 +75,12 @@ data = f.readlines()
 count = 0
 # Note: If adding new prompt, add var, put in list of prompt var and give if else condition for base path and file name
 prompt_for_title = ". Give SEO Optimized title which is less 100 characters \n"
-prompt_for_content = ". Improve this into 30 words as newsletter. \n"
-prompt_for_hook = ". Give a sentence that is outlining the dire consequences of ignorance the above news in 20 words.\n"
+prompt_for_content = ". Improve this into 20 words as newsletter. \n"
+prompt_for_hook = ". Formulate a compelling hook in 10 words with a negative tone for above news. If it's [negative aspect], engage with '[Related emotion] [related audience]? A critical issue demanding your attention.\n"
+#prompt_for_hook ="Begin with a tailored hook based on the above news in 10 words. If it's about relevant topic, engage viewers with 'Are you a related audience? This news is for you i.\n"
 prompt_for_hashtag = ". Give 5 hashtags as SENTENCE.\n"
 prompt_for_meme = ". Give 3 to 7 words only for meme. \n"
-list_of_prompt = [prompt_for_title, prompt_for_content, prompt_for_hashtag, prompt_for_meme, prompt_for_hook]
+list_of_prompt =[prompt_for_title, prompt_for_content, prompt_for_hashtag, prompt_for_meme,prompt_for_hook]
 while True:
     try:
         # Rytr Ai

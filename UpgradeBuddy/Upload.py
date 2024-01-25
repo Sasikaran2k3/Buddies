@@ -17,6 +17,8 @@ def ErrorCorrection():
 def YoutubeUpload():
     # Open Yt Studio
     browser.get("https://studio.youtube.com/")
+    browser.minimize_window()
+    browser.maximize_window()
     # Create Button
     browser.find_element(By.ID, "create-icon").click()
     browser.find_element(By.ID, "text-item-0").click()

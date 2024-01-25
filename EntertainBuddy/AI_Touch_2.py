@@ -13,7 +13,19 @@ browser = StartBrowser.Start_Lap("EntertainBuddy")
 
 
 def ErrorCorrection():
-    browser.get("https://app.rytr.me/create")
+    browser.implicitly_wait(20)
+    browser.get("https://bard.google.com/chat")
+    text_box = browser.find_element(By.XPATH, '//div[@aria-label="Input for prompt text"]')
+    text_box.click()
+    text_box.send_keys("Hi\n")
+    time.sleep(3)
+    response = browser.find_element(By.XPATH, '//message-content')
+    for i in response.find_elements(By.XPATH, '//span'):
+        try:
+            print(i.text.strip())
+        except:
+            break
+    print(response)
     input()
 
 
