@@ -109,10 +109,10 @@ def ImageAnimation(ImageClip, duration, flag):
 
     # Calculate the canvas dimensions (9:16 aspect ratio)
     canvas_width = 1080-18-18 # -18 is to fit in template
-    canvas_height = 720
+    canvas_height = 820
 
     # Resize the image to have a height of 1920 pixels and maintain its original aspect ratio
-    resized_image = image.resize(height=1300)
+    resized_image = image.resize(height=canvas_height)
     #background = background_image.resize(height = 1920)
     # Create a black background clip with the canvas dimensions
     background = ColorClip(size=(canvas_width, canvas_height), color=(0, 0, 0))
@@ -159,6 +159,8 @@ for i in l:
 def MakeVideo():
     audio = AudioFileClip(os.path.dirname(__file__) + "/Data/%s.wav" % date)
     back = AudioFileClip(os.path.dirname(__file__) + "/Background1.mp3")
+    effect = AudioFileClip(os.path.dirname(__file__) + "/Background/Sound_Effects2.mp3")
+    back = concatenate_audioclips([effect,back])
     final = []
 
     # No of image Shifts
@@ -176,18 +178,18 @@ def MakeVideo():
     background = ColorClip(color=(0, 0, 0),size=(1080, 1920))
     background = ImageClip(os.path.dirname(__file__) + "/Background/Background_Template.png").set_duration(shift_count * divider)
     # 600px top and 720px Video and 600 bottom so total 1920
-    # Combine all the small video to full video and place at y axis 600
-    out = concatenate(final, method="compose").set_position((18, 800))
+    # Combine all the small video to full video and place at y axis 800
+    out = concatenate(final, method="compose").set_position((18, 720))
 
     # Sentence 1 to write on top of video with size of 300px
-    text1 = TextClip(parts_of_meme, font="Montserrat-ExtraBold", color="black", method="caption", size=(1080-18-18, 300),
-                     align="south", kerning=-5).set_position((18,500)).set_duration(divider*shift_count)
+    text1 = TextClip(parts_of_meme, font="Montserrat-ExtraBold", color="black", method="caption", size=(1080-18-18, 200),
+                     align="south", kerning=-5).set_position((18,480)).set_duration(divider*shift_count)
     print("First Sentence = ", parts_of_meme)
 
 
     out = CompositeVideoClip([background, out, text1]).set_duration(shift_count * divider)
     out = out.set_audio(CompositeAudioClip([audio, back]).set_duration(divider*shift_count))
-    out = concatenate_videoclips([VideoFileClip(os.path.dirname(__file__) + "/Background/Background_Template.mp4").subclip(0, 1.5),out])
+    #out = concatenate_videoclips([VideoFileClip(os.path.dirname(__file__) + "/Background/Background_Template.mp4").subclip(0, 1.5),out])
     out.write_videofile(os.path.dirname(__file__) + "/%s.mp4" % date, fps=24)
 
 
@@ -198,6 +200,7 @@ print(content)
 parts_of_meme = content[1:-1].upper()
 print("Parts :",len(parts_of_meme),parts_of_meme)
 MakeVideo()
+
 browser = StartBrowser.Start_Lap("EntertainBuddy")
 
 count = 0
