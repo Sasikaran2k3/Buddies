@@ -8,7 +8,7 @@ f = open(os.path.dirname(__file__) + "//Data//" + date + "_script.txt", "r")
 content = f.read()
 f = open(os.path.dirname(__file__) + "//Data//" + date + "_hook.txt", "r")
 hook = f.read()
-stripped_content = hook + content + ". Following Entertain Buddy, hit like, and drop 'buddy' in the comments for more details!"
+stripped_content = hook + content + ". Following Entertain Buddy and drop 'buddy' in the comments for more details! Thanks for watching."
 
 print(stripped_content)
 
