@@ -237,5 +237,5 @@ while True:
             print("Kapwing Error")
             break
     else:
-        browser.quit()
+        browser.close()
         break

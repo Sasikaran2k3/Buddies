@@ -106,5 +106,5 @@ while True:
             print("Error Limit Reached")
             break
     else:
-        browser.quit()
+        browser.close()
         break
