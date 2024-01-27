@@ -7,17 +7,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 import StartBrowser
 
 # date is used for naming the files
-date = "".join(str(datetime.date.today()).split("-"))
+date = "20240125"#"".join(str(datetime.date.today()).split("-"))
 
 browser = StartBrowser.Start_Lap("UpgradeBuddy")
 
 
 def ErrorCorrection():
-    browser.get("https://app.rytr.me/create")
-    input()
+    browser.get("https://chat.openai.com/")
+    time.sleep(5)
+    text_box = browser.find_element(By.XPATH, '//textarea[@id="prompt-textarea"]')
+    prompt_for_content = ". Improve this into 20 words as newsletter. \n"
+    f = open(os.path.dirname(__file__) + "/Data/" + date + ".txt", 'r')
+    data = f.readlines()
+    instance_prompt = data[0].replace("\n", "") + prompt_for_content
+    text_box.send_keys("write 100 words abt sea\n")
+    wait = WebDriverWait(browser,1000)
+    wait.until(expected_conditions.visibility_of_element_located((By.XPATH,'//button[@data-testid="send-button"]')))
+    time.sleep(3)
+    response = browser.find_elements(By.XPATH, '//div[@data-message-author-role="assistant"]//p')
+    response[0].click()
+    print(response[0].text)
+    quit()
 
 
-#ErrorCorrection()
+ErrorCorrection()
 
 def Talk_to_Rytr(prompt):
     time.sleep(1)
