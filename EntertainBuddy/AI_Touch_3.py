@@ -70,7 +70,7 @@ data = f.readlines()
 count = 0
 # Note: If adding new prompt, add var, put in list of prompt var and give if else condition for base path and file name
 prompt_for_title = ". Give SEO Optimized title which is less 100 characters\n"
-prompt_for_content = ". Give a 30 words artical\n"
+prompt_for_content = ". Give a script in form of paragraph with just 30 words. The script should start with a '2 Things to know about' the [above news] followed by the news in 2 points as a paragraph.\n"
 prompt_for_hashtag = ". Give 5 hashtags in one line.\n"
 prompt_for_meme = ". Give a meme in 3 to 7 words only.\n"
 list_of_prompt =[prompt_for_title, prompt_for_content, prompt_for_hashtag, prompt_for_meme]
