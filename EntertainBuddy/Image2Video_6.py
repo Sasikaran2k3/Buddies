@@ -13,28 +13,18 @@ from selenium.webdriver.common.keys import Keys
 import StartBrowser
 
 def ErrorCorrection():
-    from moviepy.video.fx.resize import resize
-    def scroll(get_frame, t):
-        #print(t)
-        frame = get_frame(t)
-        frame = Image.fromarray(frame)
-        w,h = (frame.width,frame.height)
-        frame = frame.crop((0+t*10,0+t*10,w-t*10,h-t*10))
-        frame_region = frame.resize((w,h),Image.LANCZOS)
-        #print(frame_region)
-        return np.array(frame_region)
-
     date = "".join(str(datetime.date.today()).split("-"))
-    path = os.path.dirname(__file__) + "/Data" +"/%s_1.png" % date
-    img = ImageClip(path)
-    img = img.fl(scroll)
-    img = img.set_duration(15).set_fps(24)
-    frames = []
-    img.write_videofile("trail.mp4")
+    background_image = moviepy.editor.ImageClip(os.path.dirname(__file__) + "/Background3.jpg")
+    background = background_image.resize((1080, 1920)).set_duration(3)
+    background_image = moviepy.editor.ImageClip(os.path.dirname(__file__) + "/Background2.png")
+    background1 = background_image.resize((900, 1500)).set_duration(3).set_position((90,350))
+    out = CompositeVideoClip([background, background1])
+    out.write_videofile(os.path.dirname(__file__) + "/%s.mp4" % date, fps=24)
+    #MakeVideo()
     quit()
 
 
-ErrorCorrection()
+#ErrorCorrection()
 def KapwingEdit():
     browser.get("https://www.kapwing.com/folder/")
 
@@ -66,7 +56,7 @@ def KapwingEdit():
     wait.until(expected_conditions.presence_of_element_located((By.XPATH, '//textarea[@data-cy="magic-textarea"]')))
     print("Sub Ready")
     # Move dragger to left to reduce subtitle length
-    for _ in range(12):
+    for _ in range(10):
         browser.find_element(By.XPATH, '//span[@role="slider"]').send_keys(Keys.LEFT)
     # Select Subtitle
     browser.find_element(By.XPATH, '//textarea[@data-cy="magic-textarea"]').click()
@@ -112,7 +102,6 @@ def KapwingEdit():
     print("Download Completed Successfully")
     print("Kapwing Closed")
 
-
 def ImageAnimation(ImageClip, duration, flag):
     # Load the image
     image = ImageClip
@@ -121,11 +110,11 @@ def ImageAnimation(ImageClip, duration, flag):
     duration = duration
 
     # Calculate the canvas dimensions (9:16 aspect ratio)
-    canvas_width = 1080
-    canvas_height = 720
+    canvas_width = 1080-18-18 # -18 is to fit in template
+    canvas_height = 820
 
     # Resize the image to have a height of 1920 pixels and maintain its original aspect ratio
-    resized_image = image.resize(height=1300)
+    resized_image = image.resize(height=canvas_height)
     #background = background_image.resize(height = 1920)
     # Create a black background clip with the canvas dimensions
     background = ColorClip(size=(canvas_width, canvas_height), color=(0, 0, 0))
@@ -148,6 +137,20 @@ def ImageAnimation(ImageClip, duration, flag):
     x_end_position_right = x_start_position_left
 
     # Create a function to animate the image's horizontal position to move right
+    def zoom(get_frame, t):
+        # print(t)
+        frame = get_frame(t)
+        frame = Image.fromarray(frame)
+        w, h = (frame.width, frame.height)
+        speed = 0.09
+        new_h = int(h / (1 + t * speed))
+        new_w = int(w / (1 + t * speed))
+        frame = frame.crop(((w - new_w) // 2, (h - new_h) // 2, (w + new_w) // 2, (h + new_h) // 2))
+        # print((((w-new_w)//2,(h-new_h)//2,(w+new_w)//2,(h+new_h)//2)))
+        frame_region = frame.resize((w, h), Image.LANCZOS)
+        # print(frame_region)
+        return np.array(frame_region)
+
     def move_image_right(t):
         x_position = int(x_start_position_right + (x_end_position_right - x_start_position_right) * t / duration)
         return x_position, 0
@@ -158,8 +161,9 @@ def ImageAnimation(ImageClip, duration, flag):
         final = CompositeVideoClip([background.set_duration(duration), animated_image_left]).set_fps(24)
     else:
         # Animate the image's horizontal position to move right within the given duration
-        animated_image_right = resized_image.set_position(move_image_right).set_duration(duration)
-        final = CompositeVideoClip([background.set_duration(duration), animated_image_right]).set_fps(24)
+        animated_image = resized_image.fl(zoom)
+        animated_image = animated_image.set_duration(duration)
+        final = CompositeVideoClip([background.set_duration(duration), animated_image]).set_fps(24)
     return final
 
 # Delete Old final video
@@ -171,15 +175,17 @@ for i in l:
 
 def MakeVideo():
     audio = AudioFileClip(os.path.dirname(__file__) + "/Data/%s.wav" % date)
-    back = AudioFileClip(os.path.dirname(__file__) + "/Background.mp3")
+    back = AudioFileClip(os.path.dirname(__file__) + "/Background1.mp3")
+    effect = AudioFileClip(os.path.dirname(__file__) + "/Background/Sound_Effects2.mp3")
+    back = concatenate_audioclips([effect,back])
     final = []
 
     # No of image Shifts
-    shift_count = 4
+    shift_count = 8
     divider = audio.duration / shift_count
 
     for i in range(shift_count):
-        pic_num = i % 4
+        pic_num = i % 6
         print(pic_num)
         img = ImageClip(os.path.dirname(__file__) + "/Data/%s_%d.png" % (date, pic_num))
         img = ImageAnimation(img, divider, flag="L" if i % 2 == 0 else "R")
@@ -187,19 +193,20 @@ def MakeVideo():
 
     # Color clip with black and reels size
     background = ColorClip(color=(0, 0, 0),size=(1080, 1920))
-
+    background = ImageClip(os.path.dirname(__file__) + "/Background/Background_Template.png").set_duration(shift_count * divider)
     # 600px top and 720px Video and 600 bottom so total 1920
-    # Combine all the small video to full video and place at y axis 600
-    out = concatenate(final, method="compose").set_position((0, 600))
+    # Combine all the small video to full video and place at y axis 800
+    out = concatenate(final, method="compose").set_position((18, 720))
 
     # Sentence 1 to write on top of video with size of 300px
-    text1 = TextClip(parts_of_meme, font="Umpush-Bold", color="white", method="caption", size=(1080, 300),
-                     align="south", kerning=-5).set_position((0,300)).set_duration(divider*shift_count)
+    text1 = TextClip(parts_of_meme, font="Montserrat-ExtraBold", color="black", method="caption", size=(1080-18-18, 200),
+                     align="south", kerning=-5).set_position((18,480)).set_duration(divider*shift_count)
     print("First Sentence = ", parts_of_meme)
 
 
     out = CompositeVideoClip([background, out, text1]).set_duration(shift_count * divider)
     out = out.set_audio(CompositeAudioClip([audio, back]).set_duration(divider*shift_count))
+    #out = concatenate_videoclips([VideoFileClip(os.path.dirname(__file__) + "/Background/Background_Template.mp4").subclip(0, 1.5),out])
     out.write_videofile(os.path.dirname(__file__) + "/%s.mp4" % date, fps=24)
 
 
@@ -207,9 +214,10 @@ date = "".join(str(datetime.date.today()).split("-"))
 f = open(os.path.dirname(__file__) + "/Data/" + date + "_meme.txt", "r")
 content = f.read()
 print(content)
-parts_of_meme = content
+parts_of_meme = content[1:-1].upper()
 print("Parts :",len(parts_of_meme),parts_of_meme)
 MakeVideo()
+
 browser = StartBrowser.Start_Lap("EntertainBuddy")
 
 count = 0
@@ -246,5 +254,5 @@ while True:
             print("Kapwing Error")
             break
     else:
-        browser.quit()
+        browser.close()
         break

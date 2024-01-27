@@ -91,7 +91,7 @@ while True:
         my_hash = " #entertainbuddy #entertainment #latestnews #trending "
         yt_hashtags = "\n"+Ai_hash + my_hash #" ".join(["#"+i.text for i in hash_result]) + my_hash
         print(yt_hashtags)
-        YoutubeUpload()
+        #YoutubeUpload()
         InstaUplaod()
     except Exception as e:
         print(e)
