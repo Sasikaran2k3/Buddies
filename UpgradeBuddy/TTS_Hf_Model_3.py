@@ -7,7 +7,11 @@ date = "".join(str(datetime.date.today()).split("-"))
 f = open(os.path.dirname(__file__) + "//Data//" + date + "_script.txt", "r")
 content = f.read()
 
-stripped_content = content + ".Following Upgrade Buddy and drop 'buddy' in the comments for more details! Thanks for watching."
+f = open(os.path.dirname(__file__) + "//Data//" + date + "_hook.txt", "r")
+hook = f.read()
+
+stripped_content = hook + content + ".Following Upgrade Buddy and drop 'buddy' in the comments for more details! Thanks for watching."
+#stripped_content = ".Following Upgrade Buddy and drop 'buddy' in the comments for more details! Thanks for watching."
 
 print(stripped_content)
 

@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import StartBrowser
 
 # date is used for naming the files
-date = "20240125"#"".join(str(datetime.date.today()).split("-"))
+date = "".join(str(datetime.date.today()).split("-"))
 
 browser = StartBrowser.Start_Lap("UpgradeBuddy")
 
@@ -30,12 +30,13 @@ def ErrorCorrection():
     quit()
 
 
-ErrorCorrection()
+#ErrorCorrection()
 
 def Talk_to_Rytr(prompt):
     time.sleep(1)
     # Click On Chat window
-    browser.find_element(By.XPATH, '//button[@aria-controls="tabs--panel--2"]').click()
+    browser.find_element(By.XPATH, '//button[@aria-controls="tabs--panel--1"]').click()
+
     # Clear old chat
     clear = browser.find_elements(By.XPATH, '//button[@class="_clear_1qglh_173"]')
     if clear != []:
@@ -89,6 +90,7 @@ count = 0
 # Note: If adding new prompt, add var, put in list of prompt var and give if else condition for base path and file name
 prompt_for_title = ". Give SEO Optimized title which is less 100 characters \n"
 prompt_for_content = ". Improve this into 20 words as newsletter. \n"
+#prompt_for_hook = ". break this news into just 5 words as hook.\n"
 prompt_for_hook = ". Formulate a compelling hook in 10 words with a negative tone for above news. If it's [negative aspect], engage with '[Related emotion] [related audience]? A critical issue demanding your attention.\n"
 #prompt_for_hook ="Begin with a tailored hook based on the above news in 10 words. If it's about relevant topic, engage viewers with 'Are you a related audience? This news is for you i.\n"
 prompt_for_hashtag = ". Give 5 hashtags as SENTENCE.\n"

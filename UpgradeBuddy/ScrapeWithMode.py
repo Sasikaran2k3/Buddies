@@ -13,6 +13,7 @@ def StartScrape(mode):
     if mode == "A":
         print("Auto Scraping")
         today_link = ShuffleNewsPageLinks()
+        today_link = ShuffleNewsPageLinks()
         browser.get(today_link)
         page = browser.find_element(By.CSS_SELECTOR, 'div[class="thumb"]>a')
         link = page.get_attribute("href")
@@ -30,7 +31,7 @@ def StartScrape(mode):
             url = check.get_attribute("src")
             print(img_desc)
             additional_images(img_desc)
-            browser.close()
+            
             time.sleep(2)
             file = open(os.path.dirname(__file__) + "/Data/" + "%s.txt" % (date), "w")
             file.write(title + "\n" + link)
@@ -45,7 +46,7 @@ def StartScrape(mode):
                 print("Scrap Error")
                 break
         else:
-            browser.close()
+            
             print("\nScrap Successful\n")
             break
 
@@ -53,18 +54,21 @@ def StartScrape(mode):
 def additional_images(img_desc, flag=0, no_of_images=6):
     # img_desc = "The ruling could require Apple to allow developers to provide external payment options"
     browser.get("https://www.google.com/imghp")
-    browser.find_element(By.XPATH, "//textarea[@type='search']").click()
-    browser.find_element(By.XPATH, "//textarea[@type='search']").send_keys(img_desc + "\n")
-    all_img = browser.find_elements(By.XPATH, '//div[@class="fR600b islir"]//img')
+    browser.find_element(By.XPATH, "//textarea[@title='Search']").click()
+    browser.find_element(By.XPATH, "//textarea[@title='Search']").send_keys(img_desc + "\n")
+    all_img = browser.find_elements(By.XPATH, '//div[@class="wIjY0d jFk0f"]//img')
     c = 1 if flag == 0 else 0
-    for i in all_img:
+    for i in all_img[::2]:
         i.click()
         time.sleep(4)
         url = browser.find_elements(By.XPATH, '//div[@class="p7sI2 PUxBg"]//img')
         pic_name = os.path.dirname(__file__) + "/Data/" + date + "_%d" % c + ".png"
         for j in url:
             if "http" in j.get_attribute("src"):
-                j.screenshot(pic_name)
+                try:
+                    j.screenshot(pic_name)
+                except:
+                    continue
                 print("downloaded")
                 c += 1
                 break
@@ -109,7 +113,6 @@ if len(my_full_news_data) == 2:
         f.writelines(my_full_news_data)
     additional_images(my_full_news_data[0], 1)
     my_full_news.truncate(0)
-    browser.close()
 elif my_news_link_data != []:
     print("selected scrap")
     StartScrape("S")

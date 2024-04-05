@@ -62,7 +62,7 @@ def InstaUplaod():
     act.move_to_element((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
     act.double_click()
     # act.click((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
-    act.send_keys("Wait for it ! " + desc + link + yt_hashtags)
+    act.send_keys(hook + desc + link + yt_hashtags)
     act.perform()
     """for i in desc+link+yt_hashtags:
         browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]').send_keys(i)"""
@@ -81,6 +81,8 @@ browser = StartBrowser.Start_Lap("UpgradeBuddy")
 count = 0
 while True:
     try:
+        f = open(os.path.dirname(__file__) + "/Data/" + date + "_hook.txt", "r")
+        hook = f.read()
         f = open(os.path.dirname(__file__) + "/Data/" + date + ".txt", "r")
         content = f.readlines()
         print(content)
@@ -97,11 +99,15 @@ while True:
         print(e)
         print(count)
         browser.refresh()
+        try:
+            browser.switch_to.alert.accept()
+        except:
+            pass
+
         count += 1
         if count > 2:
             print("Publish error")
             break
     else:
         print("Published Successfully")
-        browser.close()
         break

@@ -13,14 +13,12 @@ from selenium.webdriver.common.keys import Keys
 import StartBrowser
 
 def ErrorCorrection():
-    date = "".join(str(datetime.date.today()).split("-"))
-    background_image = moviepy.editor.ImageClip(os.path.dirname(__file__) + "/Background3.jpg")
-    background = background_image.resize((1080, 1920)).set_duration(3)
-    background_image = moviepy.editor.ImageClip(os.path.dirname(__file__) + "/Background2.png")
-    background1 = background_image.resize((900, 1500)).set_duration(3).set_position((90,350))
-    out = CompositeVideoClip([background, background1])
+    date = "20240204"  # "".join(str(datetime.date.today()).split("-"))
+    out = VideoFileClip(os.path.dirname(__file__) + "/%s.mp4" % date)
+    gif = VideoFileClip("/home/sasi/Downloads/diwali-sparkles-stars.gif").set_duration(10)
+    out = CompositeVideoClip([out, gif])
     out.write_videofile(os.path.dirname(__file__) + "/%s.mp4" % date, fps=24)
-    #MakeVideo()
+    # MakeVideo()
     quit()
 
 
@@ -254,5 +252,5 @@ while True:
             print("Kapwing Error")
             break
     else:
-        browser.close()
+        
         break

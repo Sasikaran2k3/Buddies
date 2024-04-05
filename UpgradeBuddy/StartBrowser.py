@@ -16,7 +16,10 @@ def Start_Lap(browser_name="UpgradeBuddy"):
     opt.add_argument(r'--user-data-dir=%s'%path_of_browser)
     services = Service(executable_path=os.path.dirname(__file__) + "/chromedriver")
     browser = Chrome(service=services, options=opt)
-    browser.minimize_window()
-    browser.maximize_window()
+    try:
+        browser.minimize_window()
+        browser.maximize_window()
+    except:
+        pass
     browser.implicitly_wait(15)
     return browser
