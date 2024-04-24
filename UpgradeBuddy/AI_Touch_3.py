@@ -74,7 +74,7 @@ prompt_for_title = ". Give eye catching title with extreme emotions which is les
 prompt_for_content = ". Improve this into 40 words as newsletter which carry lot of high impact emotions with examples to understand easily. \n"
 # prompt_for_hook = ". Formulate a compelling hook in 15 words with a negative tone for above news. If it's [negative aspect], engage with '[Related emotion] [related audience]? A critical issue demanding your attention.\n"
 prompt_for_hook = ". Begin with short story which is interesting,creative and related to the news in 15 words as hook.\n"
-prompt_for_hashtag = ". Give 5 hashtags as SENTENCE.\n"
+prompt_for_hashtag = ". Give 5 hashtags as SENTENCE only.\n"
 prompt_for_meme = ". Give a 3 to 7 worded sentence for meme. \n"
 list_of_prompt = [prompt_for_title, prompt_for_content, prompt_for_hashtag, prompt_for_meme, prompt_for_hook]
 while True:

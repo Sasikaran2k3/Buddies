@@ -46,13 +46,14 @@ def InstaUplaod():
     # Insta
     data = os.path.dirname(__file__) + "/" + date + ".mp4"
     browser.get("https://www.instagram.com/")
+    browser.implicitly_wait(25)
     browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="New post"]').click()
     browser.find_element(By.XPATH, '//span[text()="Post"]').click()
     video_path = str(data)
     print(video_path)
     browser.find_element(By.XPATH, '//input[@accept="image/jpeg,image/png,image/heic,image/heif,video/mp4,video/quicktime"]').send_keys(video_path)
     time.sleep(5)
-    browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="Select crop"]').click()
+    browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="Select Crop"]').click()
     browser.find_element(By.CSS_SELECTOR, 'svg[aria-label="Crop portrait icon"]').click()
     browser.find_element(By.XPATH, '//div[text()="Next"]').click()
     time.sleep(3)
@@ -62,7 +63,7 @@ def InstaUplaod():
     act.move_to_element((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
     act.double_click()
     # act.click((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
-    act.send_keys(hook + desc + link + yt_hashtags)
+    act.send_keys(desc + link + yt_hashtags)
     act.perform()
     """for i in desc+link+yt_hashtags:
         browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]').send_keys(i)"""
@@ -81,8 +82,6 @@ browser = StartBrowser.Start_Lap("UpgradeBuddy")
 count = 0
 while True:
     try:
-        f = open(os.path.dirname(__file__) + "/Data/" + date + "_hook.txt", "r")
-        hook = f.read()
         f = open(os.path.dirname(__file__) + "/Data/" + date + ".txt", "r")
         content = f.readlines()
         print(content)

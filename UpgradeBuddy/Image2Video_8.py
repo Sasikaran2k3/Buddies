@@ -260,7 +260,7 @@ parts_of_meme = content[1:-1].upper()
 print("Parts :", len(parts_of_meme), parts_of_meme)
 make_video()
 
-browser = StartBrowser.Start_Lap("EntertainBuddy")
+browser = StartBrowser.Start_Lap("UpgradeBuddy")
 
 count = 0
 while True:
