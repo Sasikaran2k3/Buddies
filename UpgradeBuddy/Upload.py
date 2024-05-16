@@ -6,7 +6,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
-
+    
 def ErrorCorrection():
     browser = StartBrowser.Start_Lap("UpgradeBuddy")
     browser.get("https://studio.youtube.com/")
@@ -31,7 +31,7 @@ def YoutubeUpload():
     text_boxes[0].clear()
     text_boxes[0].send_keys(title) if len(title) < 100 else text_boxes[0].send_keys(title[:100])
     text_boxes[1].clear()
-    text_boxes[1].send_keys(desc + link + yt_hashtags)
+    text_boxes[1].send_keys(desc + link + yt_hashtags + "#shorts")
     browser.find_element(By.XPATH,
                          '//tp-yt-paper-radio-button[@class="style-scope ytkc-made-for-kids-select"][2]').click()
     browser.find_element(By.XPATH, '//div[text() = "Next"]').click()

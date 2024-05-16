@@ -17,9 +17,10 @@ import numpy as np
 def ErrorCorrection():
     template = ImageClip(os.path.dirname(__file__) + "/Background/Buddy_Template_Green.png")
     effects = VideoFileClip(os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % 5)
-    effects.fx(vfx.resize, (1080,1920))
+    effects.fx(vfx.resize, (1080, 1920))
     effects.write_videofile(os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % 5)
     quit()
+
 
 #ErrorCorrection()
 
@@ -43,7 +44,7 @@ def additional_images():
                         pic_name = os.path.dirname(__file__) + "/Data/%s_%d%d" % (date, k, c) + ".png"
                         j.screenshot(pic_name)
                         c += 1
-                        print(f"downloaded - %d %d" % (k,c))
+                        print(f"downloaded - %d %d" % (k, c))
                         break
                     except:
                         continue
@@ -104,21 +105,20 @@ def KapwingEdit():
 
     # Export Panel
     browser.find_element(By.CSS_SELECTOR, 'div[data-cy="export-panel-create-button"]').click()
-    time.sleep(5)
-    browser.find_element(By.CSS_SELECTOR,
-                         'div[class = "common-module_smallControlButton_66vuT ExportRow-module_buttonStyle_L6WYa '
-                         'ExportRow-module_studioColor_ltubC "]').click()
-    time.sleep(7)
+    wait = WebDriverWait(browser, 1000)
+    wait.until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]')))
+    browser.find_element(By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]').click()
     print("Download Page")
 
     # Waits till the size of the file appears and then dowload button is clicked
-    wait = WebDriverWait(browser, 1000)
+    time.sleep(5)
     wait.until(expected_conditions.visibility_of_element_located(
-        (By.XPATH, '//div[@class="VideoContainer-module_commentsMetaDataFileSize_E7zW4"]')))
+        (By.XPATH, '//div[@class="VideoContainer-module_commentsMetaDataFileSize_6KG5K"]')))
     time.sleep(5)
     print("Download Available")
     while True:
         no_of_item = len(os.listdir(os.path.dirname(__file__) + "/Data"))
+        wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[text() = "Download file" ]')))
         browser.find_element(By.XPATH, '//span[text() = "Download file" ]').click()
         time.sleep(3)
         if os.listdir(os.path.dirname(__file__) + "/Data") != no_of_item:
@@ -127,13 +127,6 @@ def KapwingEdit():
             break
     print("Download Completed Successfully")
     print("Kapwing Closed")
-
-
-# Delete Old final video
-l = os.listdir(os.path.dirname(__file__))
-for i in l:
-    if ".mp4" in i:
-        os.remove(os.path.dirname(__file__) + "/" + i)
 
 
 def make_video():
@@ -149,10 +142,11 @@ def make_video():
             lambda t: shaking_position(t, size=[center_image.w, center_image.h]))
 
         background_img = center_image.fx(vfx.resize, height=1920)
-        background_img = background_img.set_position((1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24)
+        background_img = background_img.set_position((1080 / 2 - background_img.w / 2, 0)).set_duration(
+            time_limit).set_fps(24)
 
         global out
-        if i%2!=0 and j != 1:
+        if i % 2 != 0 and j != 1:
             print("effect 1 pan")
             temp = ImageClip(path).fx(vfx.resize, width=(1080 * 1.5)).set_duration(time_limit).set_fps(24)
 
@@ -160,7 +154,7 @@ def make_video():
                 [canva.set_duration(time_limit),
                  ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
                      (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24)
-                 .set_position(lambda t : (-(t / time_limit) * (temp.w - 1080), 1920 / 2 - temp.h / 2))
+                 .set_position(lambda t: (-(t / time_limit) * (temp.w - 1080), 1920 / 2 - temp.h / 2))
                  ]
             )
         elif j == 0:
@@ -188,8 +182,11 @@ def make_video():
                  ]
             )
         overlay_mask_color = (0, 165, 86)
-        overlay = VideoFileClip(os.path.dirname(__file__) + f"/Background/OverLayClip%d.mp4" % random.randint(1,3)).set_duration(out.duration)
-        out = CompositeVideoClip([out, overlay.fx(vfx.mask_color, color=overlay_mask_color, thr=100, s=5).fx(vfx.resize, (1080,1920))])
+        overlay = VideoFileClip(
+            os.path.dirname(__file__) + f"/Background/OverLayClip%d.mp4" % random.randint(1, 3)).set_duration(
+            out.duration)
+        out = CompositeVideoClip(
+            [out, overlay.fx(vfx.mask_color, color=overlay_mask_color, thr=100, s=5).fx(vfx.resize, (1080, 1920))])
         return out
 
     def shaking_position(t, freq=1, magnitude=10, size=[0, 0]):
@@ -243,7 +240,6 @@ def make_video():
     # x,y coordinate of logo template
     x, y = (54, 187)
 
-
     # Sentence 1 to write on top of video
     # text1 = TextClip(parts_of_meme, font="Montserrat-ExtraBold", color="white", method="caption",
     #                  size=(1080 - 18 - 18, 200),
@@ -252,35 +248,38 @@ def make_video():
     #d = 0
     for i in range(no_of_sentence):
         sp1 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp1.wav")
-        effect = AudioFileClip(os.path.dirname(__file__) + "/Background/Sound_Effects2.mp3")
+        effect = AudioFileClip(os.path.dirname(__file__) + f"/Background/Sound_Effects%d.mp3" % random.randint(1, 3))
         back = concatenate_audioclips([effect])
-        sound_effects = AudioFileClip(os.path.dirname(__file__) + "/Background/" + f"Sound_Effects%d.mp3" % random.randint(3, 4))
+        sound_effects = AudioFileClip(
+            os.path.dirname(__file__) + "/Background/" + f"Sound_Effects%d.mp3" % random.randint(4, 5))
 
         audio = sp1
         # Animation Pattern are logo and meme, fullSize
         # As of now 2 patterns so % 2 is used to select any of the patter
-        animation_pattern = i % 3
+        animation_pattern = 0
 
         clip_collection = []
 
         # if animation_pattern == 0 then Logo and meme pattern
         if animation_pattern == 0:
             global avatar
-            sp2 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp2.wav")
-            avatar = VideoFileClip(os.path.dirname(__file__) + "/Background/UpgradeBuddyAvatar.mp4").set_start(sp1.duration).set_duration(sp2.duration).fx(vfx.mask_color, color=(255,0,0), thr=100, s=5)
+            sp2 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp2.wav").set_start(
+                sp1.duration)
+            avatar = VideoFileClip(os.path.dirname(__file__) + "/Background/UpgradeBuddyAvatar.mp4").set_start(
+                sp1.duration).set_duration(sp2.duration).fx(vfx.mask_color, color=(255, 0, 0), thr=100, s=5)
             avatar = avatar.set_position("center")
             audio = concatenate_audioclips([sp1, sound_effects, sp2])
 
         for j in range(no_of_img_per_sentence):
             out = video_editor(i, j, no_of_img_per_sentence, audio.duration)
-            out = out.set_audio(sound_effects.set_start(out.duration-0.5))
+            out = out.set_audio(sound_effects.set_start(out.duration - 0.5))
             clip_collection.append(out)
         clip = concatenate_videoclips(clip_collection)
 
         if animation_pattern == 0:
             clip = CompositeVideoClip([clip, avatar])
-        audio = CompositeAudioClip([audio, back.set_duration(audio.duration),clip.audio])
-        audio = concatenate_audioclips([audio,sound_effects])
+        audio = CompositeAudioClip([audio, back.set_duration(audio.duration), clip.audio])
+        audio = concatenate_audioclips([audio, sound_effects])
         clip = clip.set_audio(audio)
         total_time += audio.duration
         # Clip is added to final
@@ -290,7 +289,7 @@ def make_video():
         img_of_each_clip.append(clip.to_ImageClip())
         # d+=1
         # if d == 2:
-        #     break
+        #break
     # Transition layer will contain all the effects and clips
     transition_layer = ColorClip(color=(0, 0, 0), size=(1080, 1920)).set_duration(0)
 
@@ -298,7 +297,9 @@ def make_video():
     # Now Clips are merged with effects
     for i in range(len(final) - 1):
         # As of now 5 Transition green screen clips are store so 1 to 5 any random effect is selected
-        effects = VideoFileClip(os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % random.randint(1, 5)).fx(vfx.resize, (1080,1920))
+        effects = VideoFileClip(
+            os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % random.randint(3, 5)).fx(vfx.resize,
+                                                                                                       (1080, 1920))
 
         # The effects has to start with end of current iteration clip ie final[i] and mask green is removed
         effects = effects.set_start(final[i].duration - 0.5).fx(vfx.mask_color, color=(47, 163, 43), thr=100, s=5)
@@ -325,8 +326,13 @@ def make_video():
 
 date = "".join(str(datetime.date.today()).split("-"))
 
-
 browser = StartBrowser.Start_Lap("UpgradeBuddy")
+
+# Delete Old final video
+l = os.listdir(os.path.dirname(__file__))
+for i in l:
+    if ".mp4" in i:
+        os.remove(os.path.dirname(__file__) + "/" + i)
 additional_images()
 
 make_video()
