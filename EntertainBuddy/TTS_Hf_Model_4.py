@@ -26,7 +26,7 @@ for i in range(len(content)):
                         speaker_wav=os.path.dirname(__file__) + "/Audio_train_Boy.wav")
     stripped_content = ""
     print(stripped_content)
-    if i < len(speaker) and i % 3 == 0:
+    if i < len(speaker):
         tts.tts_to_file(text=speaker[i], file_path=path + "_" + str(i) + "sp2.wav", language='en',
                         speaker_wav=os.path.dirname(__file__) + "/Audio_train_Girl.wav")
         print(speaker[i])

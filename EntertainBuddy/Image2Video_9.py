@@ -105,21 +105,20 @@ def KapwingEdit():
 
     # Export Panel
     browser.find_element(By.CSS_SELECTOR, 'div[data-cy="export-panel-create-button"]').click()
-    time.sleep(5)
-    browser.find_element(By.CSS_SELECTOR,
-                         'div[class = "common-module_smallControlButton_66vuT ExportRow-module_buttonStyle_L6WYa '
-                         'ExportRow-module_studioColor_ltubC "]').click()
-    time.sleep(7)
+    wait = WebDriverWait(browser, 1000)
+    wait.until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]')))
+    browser.find_element(By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]').click()
     print("Download Page")
 
     # Waits till the size of the file appears and then dowload button is clicked
-    wait = WebDriverWait(browser, 1000)
+    time.sleep(5)
     wait.until(expected_conditions.visibility_of_element_located(
-        (By.XPATH, '//div[@class="VideoContainer-module_commentsMetaDataFileSize_E7zW4"]')))
+        (By.XPATH, '//div[@class="VideoContainer-module_commentsMetaDataFileSize_6KG5K"]')))
     time.sleep(5)
     print("Download Available")
     while True:
         no_of_item = len(os.listdir(os.path.dirname(__file__) + "/Data"))
+        wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[text() = "Download file" ]')))
         browser.find_element(By.XPATH, '//span[text() = "Download file" ]').click()
         time.sleep(3)
         if os.listdir(os.path.dirname(__file__) + "/Data") != no_of_item:
@@ -128,13 +127,6 @@ def KapwingEdit():
             break
     print("Download Completed Successfully")
     print("Kapwing Closed")
-
-
-# Delete Old final video
-l = os.listdir(os.path.dirname(__file__))
-for i in l:
-    if ".mp4" in i:
-        os.remove(os.path.dirname(__file__) + "/" + i)
 
 
 def make_video():
@@ -255,15 +247,14 @@ def make_video():
     #d = 0
     for i in range(no_of_sentence):
         sp1 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp1.wav")
-        effect = AudioFileClip(os.path.dirname(__file__) + "/Background/Sound_Effects2.mp3")
+        effect = AudioFileClip(os.path.dirname(__file__) + f"/Background/Sound_Effects%d.mp3" % random.randint(1, 3))
         back = concatenate_audioclips([effect])
-        sound_effects = AudioFileClip(
-            os.path.dirname(__file__) + "/Background/" + f"Sound_Effects%d.mp3" % random.randint(3, 4))
+        sound_effects = AudioFileClip(os.path.dirname(__file__) + "/Background/" + f"Sound_Effects%d.mp3" % random.randint(4, 5))
 
         audio = sp1
-        # Animation Pattern are logo and meme, fullSize
-        # As of now 2 patterns so % 2 is used to select any of the patter
-        animation_pattern = i % 3
+
+        # Always Have Second Voice
+        animation_pattern = 0 # i%2 every 2 sentences
 
         clip_collection = []
 
@@ -304,7 +295,7 @@ def make_video():
     for i in range(len(final) - 1):
         # As of now 5 Transition green screen clips are store so 1 to 5 any random effect is selected
         effects = VideoFileClip(
-            os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % random.randint(1, 5)).fx(vfx.resize,
+            os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % random.randint(3, 5)).fx(vfx.resize,
                                                                                                        (1080, 1920))
 
         # The effects has to start with end of current iteration clip ie final[i] and mask green is removed
@@ -328,6 +319,13 @@ def make_video():
 
     # Audio is implated and exported
     out.write_videofile(os.path.dirname(__file__) + "/%s.mp4" % date, fps=24)
+
+
+# Delete Old final video
+l = os.listdir(os.path.dirname(__file__))
+for i in l:
+    if ".mp4" in i:
+        os.remove(os.path.dirname(__file__) + "/" + i)
 
 
 date = "".join(str(datetime.date.today()).split("-"))

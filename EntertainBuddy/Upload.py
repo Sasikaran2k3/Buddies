@@ -31,7 +31,7 @@ def YoutubeUpload():
     text_boxes[0].clear()
     text_boxes[0].send_keys(title) if len(title) < 100 else text_boxes[0].send_keys(title[:100])
     text_boxes[1].clear()
-    text_boxes[1].send_keys(desc + link + yt_hashtags)
+    text_boxes[1].send_keys(desc + link + yt_hashtags + "#shorts")
     browser.find_element(By.XPATH,
                          '//tp-yt-paper-radio-button[@class="style-scope ytkc-made-for-kids-select"][2]').click()
     browser.find_element(By.XPATH, '//div[text() = "Next"]').click()
@@ -57,7 +57,7 @@ def InstaUplaod():
     browser.find_element(By.XPATH, '//div[text()="Next"]').click()
     time.sleep(3)
     browser.find_element(By.XPATH, '//div[text()="Next"]').click()
-    print(desc + link + yt_hashtags)
+    print(title + desc + link + yt_hashtags)
     act = ActionChains(browser)
     act.move_to_element((browser.find_element(By.XPATH, '//div[@aria-label="Write a caption..."]'))).perform()
     act.double_click()
@@ -88,7 +88,7 @@ while True:
         desc = "\nOpen the link to know more details\n"
         link = content[1]
         Ai_hash = open(os.path.dirname(__file__) + "/Data/" +date+"_hash.txt","r").read()
-        my_hash = " #EntertainBuddy #tech #technews #latestnews #trending "
+        my_hash = " #EntertainBuddy #latestnews #trending "
         yt_hashtags = "\n"+Ai_hash + my_hash #" ".join(["#"+i.text for i in hash_result]) + my_hash
         print(yt_hashtags)
         YoutubeUpload()
@@ -99,6 +99,7 @@ while True:
         browser.refresh()
         try:
             browser.switch_to.alert.accept()
+            browser.quit()
         except:
             pass
 
