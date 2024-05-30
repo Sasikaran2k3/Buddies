@@ -15,16 +15,15 @@ import numpy as np
 
 
 def ErrorCorrection():
-    template = ImageClip(os.path.dirname(__file__) + "/Background/Buddy_Template_Green.png")
-    effects = VideoFileClip(os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % 5)
-    effects.fx(vfx.resize, (1080, 1920))
-    effects.write_videofile(os.path.dirname(__file__) + f"/Background/TransitionClip%d.mp4" % 5)
+    from diffusers import DiffusionPipeline
+
+    pipeline = DiffusionPipeline.from_pretrained("stabilityai/stable-video-diffusion-img2vid-xt")
     quit()
 
 
 #ErrorCorrection()
 
-def additional_images():
+def additional_images(no_of_img_per_sentence=2):
     f = open(os.path.dirname(__file__) + "/Data/" + date + "_img.txt")
     prompts = f.readlines()
     for k in range(len(prompts)):
@@ -48,7 +47,7 @@ def additional_images():
                         break
                     except:
                         continue
-            if c == 2:
+            if c == no_of_img_per_sentence:
                 break
 
 
@@ -147,30 +146,7 @@ def make_video():
 
         global out
         if i % 2 != 0 and j != 1:
-            print("effect 1 pan")
-            temp = ImageClip(path).fx(vfx.resize, width=(1080 * 1.5)).set_duration(time_limit).set_fps(24)
-
-            out = out = CompositeVideoClip(
-                [canva.set_duration(time_limit),
-                 ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
-                     (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24)
-                 .set_position(lambda t: (-(t / time_limit) * (temp.w - 1080), 1920 / 2 - temp.h / 2))
-                 ]
-            )
-        elif j == 0:
-            print("effect 2 shake")
-
-            out = CompositeVideoClip(
-                [canva.set_duration(time_limit),
-                 ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
-                     (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24),
-                 ImageClip(path).fx(vfx.resize, width=1080).set_duration(time_limit).set_fps(
-                     24).set_position(lambda t: shaking_position(t, size=center_image.size))
-                 ]
-            )
-        else:
             print("effect 3 zoom")
-
             out = CompositeVideoClip(
                 [canva.set_duration(time_limit),
                  ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
@@ -181,6 +157,40 @@ def make_video():
                      24).fx(vfx.resize, zoom_in).set_position(("center"))
                  ]
             )
+            # print("effect 1 pan")
+            # temp = ImageClip(path).fx(vfx.resize, width=(1080 * 1.5)).set_duration(time_limit).set_fps(24)
+            #
+            # out = out = CompositeVideoClip(
+            #     [canva.set_duration(time_limit),
+            #      ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
+            #          (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24)
+            #      .set_position(lambda t: (-(t / time_limit) * (temp.w - 1080), 1920 / 2 - temp.h / 2))
+            #      ]
+            # )
+        else:
+            print("effect 2 shake")
+
+            out = CompositeVideoClip(
+                [canva.set_duration(time_limit),
+                 ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
+                     (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(24),
+                 ImageClip(path).fx(vfx.resize, width=1080).set_duration(time_limit).set_fps(
+                     24).set_position(lambda t: shaking_position(t, size=center_image.size))
+                 ]
+            )
+        # else:
+        #     print("effect 3 zoom")
+        #
+        #     out = CompositeVideoClip(
+        #         [canva.set_duration(time_limit),
+        #          ImageClip(path).fx(vfx.resize, width=1080, height=1920).set_position(
+        #              (1080 / 2 - background_img.w / 2, 0)).set_duration(time_limit).set_fps(
+        #              24),
+        #          ImageClip(path).fx(vfx.resize, width=1080).set_duration(
+        #              time_limit).set_fps(
+        #              24).fx(vfx.resize, zoom_in).set_position(("center"))
+        #          ]
+        #     )
         overlay_mask_color = (0, 165, 86)
         overlay = VideoFileClip(
             os.path.dirname(__file__) + f"/Background/OverLayClip%d.mp4" % random.randint(1, 3)).set_duration(
@@ -201,7 +211,7 @@ def make_video():
         # concept is 0-100% of total width is displayed as video.
         # if t is 1 and duration is 2 then 50% of width of the img is the position and
         # if t is 2 then 100% of width of img is covered
-        posi = -(t / (2)) * (dimension_of_full_green_resize[1] - dimension_of_full_green_temp[1] - x), y
+        posi = -(t / (2)) * (dimension_of_full_green_resize[1] - dimension_of_full_green_temp[1] - x), 0
         return posi
 
     def zoom_in(t):
@@ -215,10 +225,9 @@ def make_video():
     for i in lines:
         if len(i) < 3:
             lines.remove(i)
+
     no_of_sentence = len(lines)
     print(no_of_sentence)
-    no_of_img_per_sentence = 2
-
     dummy_size = (1920, 1080)
     dummy_back = ColorClip(size=dummy_size[::-1], color=(0, 0, 0)).set_duration(2)
 
@@ -247,14 +256,14 @@ def make_video():
     #d = 0
     for i in range(no_of_sentence):
         sp1 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp1.wav")
-        effect = AudioFileClip(os.path.dirname(__file__) + f"/Background/Sound_Effects%d.mp3" % random.randint(1, 3))
-        back = concatenate_audioclips([effect])
+        # effect = AudioFileClip(os.path.dirname(__file__) + f"/Background/Sound_Effects%d.mp3" % random.randint(1, 3))
+        # back = concatenate_audioclips([effect])
         sound_effects = AudioFileClip(os.path.dirname(__file__) + "/Background/" + f"Sound_Effects%d.mp3" % random.randint(4, 5))
 
         audio = sp1
 
         # Always Have Second Voice
-        animation_pattern = 0 # i%2 every 2 sentences
+        animation_pattern = 0 if i == no_of_sentence-1 else 1
 
         clip_collection = []
 
@@ -275,7 +284,8 @@ def make_video():
 
         if animation_pattern == 0:
             clip = CompositeVideoClip([clip, avatar])
-        audio = CompositeAudioClip([audio, back.set_duration(audio.duration), clip.audio])
+        #audio = CompositeAudioClip([audio, back.set_duration(audio.duration), clip.audio])
+        audio = CompositeAudioClip([audio, clip.audio])
         audio = concatenate_audioclips([audio, sound_effects])
         clip = clip.set_audio(audio)
 
@@ -329,9 +339,9 @@ for i in l:
 
 
 date = "".join(str(datetime.date.today()).split("-"))
-
+no_of_img_per_sentence = 2
 browser = StartBrowser.Start_Lap("EntertainmentBuddy")
-additional_images()
+additional_images(no_of_img_per_sentence)
 
 make_video()
 

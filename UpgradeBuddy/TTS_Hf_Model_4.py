@@ -23,10 +23,10 @@ for i in range(len(content)):
     stripped_content += content[i]
     if len(stripped_content) > 3:
         tts.tts_to_file(text=stripped_content, file_path=path + "_" + str(i) + "sp1.wav", language='en',
-                        speaker_wav=os.path.dirname(__file__) + "/Audio_train_Girl.wav")
+                        speaker_wav=os.path.dirname(__file__) + "/Audio_train_Boy.wav")
     stripped_content = ""
     print(stripped_content)
-    if i < len(speaker):
+    if i < len(speaker) and i == len(content) - 1:
         tts.tts_to_file(text=speaker[i], file_path=path + "_" + str(i) + "sp2.wav", language='en',
-                        speaker_wav=os.path.dirname(__file__) + "/Audio_train_Boy.wav")
+                        speaker_wav=os.path.dirname(__file__) + "/Audio_train_Girl.wav")
         print(speaker[i])

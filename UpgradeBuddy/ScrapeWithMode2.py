@@ -12,7 +12,7 @@ def StartScrape(mode):
     # A refers to AutoScrape
     if mode == "A":
         print("Auto Scraping")
-        today_link = ShuffleNewsPageLinks()
+        ShuffleNewsPageLinks()
         today_link = ShuffleNewsPageLinks()
         browser.get(today_link)
         page = browser.find_element(By.CSS_SELECTOR, 'div[class="thumb"]>a')
