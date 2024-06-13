@@ -135,8 +135,8 @@ my_format_prompt = (
     'of that sentence in between sentences enclosed in [] and a very short dialogue for a second '
     'speaker who is impacted because of the sentence which is enclosed in (). Like Script Sentence [image '
     'prompt] (second speaker dialogue only) Followed by next sentence [] () as same paragraph. The script '
-    'should tone like inspiring, use short sentence and easy to use frequent english words, '
-    'dont sound like AI, avoid obvious knowledge, start with catchy hook like If You are a student '
+    'should tone like inspiring, use short sentence for script sentence avoid obvious knowledge and easy to use frequent english words, '
+    'dont sound like AI, start with catchy hook like If You are a student '
     'You have to watch it or This is what will happen if this happen. Recollect what are the things '
     'required in a script and write a script in above format and constraints as single paragraph '
     'without emoji. Output should be only a single paragraph without any heading or response.Do not use any brackets in script sentence please.')
@@ -161,7 +161,7 @@ else:
 prompt_for_hook = ". Begin with short story which is interesting,creative and related to the news in 15 words as hook.\n"
 prompt_for_hashtag = ". Give 5 POPULAR hashtags as SENTENCE like ' #abc #def #xyx #fgh #xlm '.\n"
 prompt_for_meme = ". Give a 3 to 7 worded sentence for meme. \n"
-list_of_prompt = [prompt_for_content]#[prompt_for_title, prompt_for_content, prompt_for_hashtag]
+list_of_prompt = [prompt_for_title, prompt_for_content, prompt_for_hashtag]
 while True:
     try:
         #input()

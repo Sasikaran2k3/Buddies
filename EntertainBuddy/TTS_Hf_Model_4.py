@@ -1,4 +1,4 @@
-import torch
+import emoji
 from TTS.api import TTS
 import os
 import datetime
@@ -20,7 +20,9 @@ path = f"{os.path.dirname(__file__)}/Data/{date}"
 
 
 for i in range(len(content)):
-    stripped_content += content[i]
+    for char in content[i]:
+        if not emoji.is_emoji(char):
+            stripped_content += char
     if len(stripped_content) > 3:
         tts.tts_to_file(text=stripped_content, file_path=path + "_" + str(i) + "sp1.wav", language='en',
                         speaker_wav=os.path.dirname(__file__) + "/Audio_train_Boy.wav")

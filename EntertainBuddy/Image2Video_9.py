@@ -21,7 +21,7 @@ def ErrorCorrection():
     quit()
 
 
-#ErrorCorrection()
+ErrorCorrection()
 
 def additional_images(no_of_img_per_sentence=2):
     f = open(os.path.dirname(__file__) + "/Data/" + date + "_img.txt")

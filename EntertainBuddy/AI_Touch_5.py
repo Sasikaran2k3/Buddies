@@ -138,20 +138,47 @@ my_format_prompt = (
     'should tone like inspiring, use short sentence and easy to use frequent english words, '
     'dont sound like AI, avoid obvious knowledge, start with catchy hook like If You are a student '
     'You have to watch it or This is what will happen if this happen. Recollect what are the things '
-    'required in a script and write a script in above format and constraints as single paragraph '
-    'without emoji. Output should be only a single paragraph without any heading or response.Do not use any brackets in script sentence please.')
+    'required in a script and write a script in above format and constraints as single paragraph. '
+    'Strictly Use atleast 3 emojis in each the script sentences alone but no emoji in image prompt and second speaker '
+    'dialogue. Output should be only a single paragraph without any heading or response.Do not use any brackets in '
+    'script sentence please and do not let any script sentence without [] () including last sentence.')
 
 prompt_for_title = ". Give eye catching title with extreme emotions which is less 100 characters without emoji in 3 to 6 words\n"
 # prompt_for_content = ". You are the best Question Answer Framer who can re-write news to Questions and Answer with comparative examples for better understanding and related to a common man. Write 4 meaningful and short and relatable Questions With Answer using the above news in one paragraph. The Question should contain image prompt of that sentence in between sentences enclosed in [] and a very short dialogue for a second speaker who gives Answer for the question which is enclosed in (). Example, Can Selena Gomez and Benny Blanco’s romance get any hotter? [A cozy photo of Selena and Benny snuggled up] (They're setting the love bar sky-high!).Why is Selena Gomez sharing intimate moments on Instagram? [An affectionate snapshot of Selena and Benny] (To show off their sweet love story!).Are Selena Gomez and Benny Blanco the newest power couple? [A picture capturing Selena and Benny's adorable bond] (Their romance is stealing the spotlight!).What's making Selena Gomez's fans swoon on social media? [A heartwarming image of Selena and Benny together] (Seeing her so happy with Benny is melting hearts!). Question and answer in the pattern of Question [img] (sec speaker Answer with facts and comparative examples). Only make the first question more crazy and curious to hook the audience based on news But rest of the Questions and Answers to give more facts and comparative examples with positive voice. Question and answers are short in length with minimum 8 to maximum 12 words to make audience listen before they scroll  and make all 4 sentence one after other separated by '.' and without space as a single sentence.Tone is Very Simple english (15 years old) and friendly and more facts from news. Output formate is same as example (Single Paragraph)\n"
 if len(prompt)!=1:
-    prompt_for_content = ("You are an expert in Instagram reels script writer creating viral and shareable scripts. I am a "
-                          "script writer for a entertainment news channel named as Entertain Buddy who has mostly audience of age between 18 to 26 from India. Create a reels script with the above news in MY format." + my_format_prompt + "Example : If you're a student, you need to watch this! Elon Musk says AI will replace all "
-                          "jobs. [Image of Elon Musk speaking] (What? No"
-                          "jobs left?) He believes it's not a bad thing. \"Probably none of us will have a job,"
-                          "\" Musk remarked at a Paris tech event. [Image of Paris tech event] (So, what will we do?) "
-                          "Jobs will become optional. \"If you want to do a job as a hobby, you can.\" [Image of a "
-                          "hobbyist working] (Just for fun?) Otherwise, AI and robots will provide any goods and "
-                          "services. [Image of robots working] (That's crazy!).use short sentences and consider hook also as a script sentence.\n")
+    prompt_for_content = ("You are an expert in Instagram reels script writer creating viral and shareable scripts. I "
+                          "am a script writer for a entertainment news channel named as Entertain Buddy who has "
+                          "mostly audience of age between 18 to 26 from India. Create a reels script with the above "
+                          "news in MY format." + my_format_prompt + "Example : If you're a fan {Flexed Biceps} of "
+                                                                    "Allu Arjun {Clapper Board}, you need to see "
+                                                                    "this! {Glowing Star} [Image of Allu Arjun "
+                                                                    "smiling] (Wow, that's impressive!) The superstar "
+                                                                    "is not just acting; he's inspiring environmental "
+                                                                    "change with a lot of money {Money Bag}. [Image "
+                                                                    "of Environmental pollution] (Changes required in "
+                                                                    "mandatory!) {Seedling} On World Environment Day "
+                                                                    "{Herb}, he shared a powerful message {Speech "
+                                                                    "Balloon} urging us to save the Earth {Earth "
+                                                                    "Globe Europe-Africa}. [Image of Earth with "
+                                                                    "greenery] (We should all listen!) His upcoming "
+                                                                    "film {Clapper Board}, Pushpa 2: The Rule {"
+                                                                    "Crown}, is set to release on August 15, "
+                                                                    "2024 {Calendar}. [Image of Pushpa 2 poster] (I "
+                                                                    "can't wait!) It's expected to be a blockbuster "
+                                                                    "hit {Bomb} continuing the thrilling story {Movie "
+                                                                    "Camera}. [Image of a thrilling scene from "
+                                                                    "Pushpa] (Sounds amazing!) {Glowing Star} Allu "
+                                                                    "Arjun's dedication to environmental {Herb} "
+                                                                    "causes is truly inspiring {Clapping Hands}. ["
+                                                                    "Image of Allu Arjun planting a tree] (What a "
+                                                                    "role model!) Let's follow his lead {World Map} "
+                                                                    "and make a positive {Heavy Plus Sign} impact. ["
+                                                                    "Image of people taking eco-friendly actions] (We "
+                                                                    "can do it!).Strictly consider text inside {} as "
+                                                                    "emoji and generated script should have emoji ONLY."
+                                                                    "use short sentences and consider hook also as a "
+                                                                    "script sentence. Finally replace content in {} to emoji "
+                                                                    "then give me the generated script\n")
 else:
     prompt_for_content = (
                 "You are an expert in Instagram reels script writer creating viral and shareable scripts. I am a "

@@ -24,14 +24,15 @@ def ErrorCorrection():
 
 #ErrorCorrection()
 
-def additional_images(no_of_img_per_sentence = 2, sentence_no = 0):
+def additional_images(no_of_img_per_sentence=2, sentence_no=0):
     f = open(os.path.dirname(__file__) + "/Data/" + date + "_img.txt")
     prompts = f.readlines()
     # img_desc = "The ruling could require Apple to allow developers to provide external payment options"
     browser.get("https://www.google.com/imghp")
     browser.find_element(By.XPATH, "//textarea[@title='Search']").click()
-    browser.find_element(By.XPATH, "//textarea[@title='Search']").send_keys(prompts[sentence_no].replace('"', '') + "\n")
-    all_img = browser.find_elements(By.XPATH, '//div[@class="islrc"]//img')
+    browser.find_element(By.XPATH, "//textarea[@title='Search']").send_keys(
+        prompts[sentence_no].replace('"', '') + "\n")
+    all_img = browser.find_elements(By.XPATH, '//div[@class="wIjY0d jFk0f"]//img')
     c = 0
     for i in all_img[::2]:
         i.click()
@@ -49,6 +50,16 @@ def additional_images(no_of_img_per_sentence = 2, sentence_no = 0):
                     continue
         if c == no_of_img_per_sentence:
             break
+
+
+def image_for_all_sentence(no_of_sentence):
+    print(no_of_sentence)
+    for i in range(no_of_sentence):
+        sp1 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp1.wav").duration
+        no_of_img_per_second = 1
+        no_of_img_per_sentence = int(sp1 // no_of_img_per_second)
+        print(f"no_of_img_per_second : {no_of_img_per_sentence}")
+        additional_images(no_of_img_per_sentence, i)
 
 
 def KapwingEdit():
@@ -105,8 +116,10 @@ def KapwingEdit():
     # Export Panel
     browser.find_element(By.CSS_SELECTOR, 'div[data-cy="export-panel-create-button"]').click()
     wait = WebDriverWait(browser, 1000)
-    wait.until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]')))
-    browser.find_element(By.CSS_SELECTOR, 'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]').click()
+    wait.until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR,
+                                                                  'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]')))
+    browser.find_element(By.CSS_SELECTOR,
+                         'div[class = "common-module_smallControlButton_xMfva ExportRow-module_buttonStyle_K-mdn ExportRow-module_studioColor_Xf7VQ"]').click()
     print("Download Page")
 
     # Waits till the size of the file appears and then dowload button is clicked
@@ -128,7 +141,7 @@ def KapwingEdit():
     print("Kapwing Closed")
 
 
-def make_video():
+def make_video(no_of_sentence):
     def video_editor(i, j, no_of_img_per_sentence, audio_duration):
         time_limit = audio_duration / no_of_img_per_sentence
 
@@ -210,12 +223,6 @@ def make_video():
         # if t is 1 second the zoom is 1.15 and if t is 2 then 1.3
         return 1 + t * 0.05
 
-    lines = open(os.path.dirname(__file__) + "/Data/" + date + "_script.txt", 'r').readlines()
-    for i in lines:
-        if len(i) < 3:
-            lines.remove(i)
-    no_of_sentence = len(lines)
-    print(no_of_sentence)
     total_time = 0
 
     dummy_size = (1920, 1080)
@@ -247,8 +254,9 @@ def make_video():
     for i in range(no_of_sentence):
         sp1 = AudioFileClip(os.path.dirname(__file__) + "/Data/" + date + "_" + str(i) + "sp1.wav")
 
-        no_of_img_per_sentence = int(sp1.duration // 2)
-        additional_images(no_of_img_per_sentence, i)
+        no_of_img_per_second = 1
+        no_of_img_per_sentence = int(sp1.duration // no_of_img_per_second)
+        print(f"no_of_img_per_second : {no_of_img_per_sentence}")
 
         # effect = AudioFileClip(os.path.dirname(__file__) + f"/Background/Sound_Effects%d.mp3" % random.randint(1, 3))
         # back = concatenate_audioclips([effect])
@@ -258,7 +266,7 @@ def make_video():
         audio = sp1
         # Animation Pattern are logo and meme, fullSize
         # As of now 2 patterns so % 2 is used to select any of the patter
-        animation_pattern = 0 if i == no_of_sentence-1 else 1
+        animation_pattern = 0 if i == no_of_sentence - 1 else 1
 
         clip_collection = []
 
@@ -338,7 +346,13 @@ for i in l:
     if ".mp4" in i:
         os.remove(os.path.dirname(__file__) + "/" + i)
 
-make_video()
+lines = open(os.path.dirname(__file__) + "/Data/" + date + "_script.txt", 'r').readlines()
+for i in lines:
+    if len(i) < 3:
+        lines.remove(i)
+no_of_sentence = len(lines)
+image_for_all_sentence(no_of_sentence)
+make_video(no_of_sentence)
 
 count = 0
 while True:

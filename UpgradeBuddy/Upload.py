@@ -76,7 +76,7 @@ def InstaUplaod():
 
 # date is used for naming the files
 date = "".join(str(datetime.date.today()).split("-"))
-
+date = "20240612"
 
 browser = StartBrowser.Start_Lap("UpgradeBuddy")
 count = 0
@@ -92,7 +92,7 @@ while True:
         my_hash = " #upgradebuddy #tech #technews #latestnews #trending "
         yt_hashtags = "\n"+Ai_hash + my_hash #" ".join(["#"+i.text for i in hash_result]) + my_hash
         print(yt_hashtags)
-        YoutubeUpload()
+        # YoutubeUpload()
         InstaUplaod()
     except Exception as e:
         print(e)

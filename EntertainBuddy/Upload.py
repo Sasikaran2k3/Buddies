@@ -75,9 +75,9 @@ def InstaUplaod():
 
 # date is used for naming the files
 date = "".join(str(datetime.date.today()).split("-"))
-date = "20240527"
 
 browser = StartBrowser.Start_Lap("EntertainmentBuddy")
+
 count = 0
 while True:
     try:
