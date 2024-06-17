@@ -35,7 +35,7 @@ def ProcessResponse():
     f.close()
 
     img_prompt = ""
-    new_speaker = ""
+    video_prompt = ""
     script = ""
     flag = 0
     for i in data:
@@ -55,7 +55,7 @@ def ProcessResponse():
 
         elif i == ')':
             flag = 0
-            new_speaker += "\n"
+            video_prompt += "\n"
             continue
         elif flag == 0 and i.isalpha():
             flag = 3
@@ -65,19 +65,19 @@ def ProcessResponse():
         elif flag == 1:
             img_prompt += i
         elif flag == 2:
-            new_speaker += i
+            video_prompt += i
 
-    new_speaker = new_speaker.strip() + " Thanks Entertain Buddy."
+    video_prompt = video_prompt.strip()
     f = open(os.path.dirname(__file__) + "/Data/" + date + "_script.txt", "w")
     f.write(script.strip())
 
     f = open(os.path.dirname(__file__) + "/Data/" + date + "_img.txt", "w")
     f.write(img_prompt.strip())
 
-    f = open(os.path.dirname(__file__) + "/Data/" + date + "_speaker.txt", "w")
-    f.write(new_speaker.strip())
+    f = open(os.path.dirname(__file__) + "/Data/" + date + "_vid.txt", "w")
+    f.write(video_prompt.strip())
 
-    print(img_prompt + "\n" + new_speaker + "\n" + script)
+    print(img_prompt + "\n" + video_prompt + "\n" + script)
 
 
 def Talk_to_Gpt(prompt):
@@ -130,79 +130,48 @@ if len(prompt) == 1:
 
 count = 0
 # Note: If adding new prompt, add var, put in list of prompt var and give if else condition for base path and file name
-my_format_prompt = (
-    'My format : The script should contain script sentence image prompt '
-    'of that sentence in between sentences enclosed in [] and a very short dialogue for a second '
-    'speaker who is impacted because of the sentence which is enclosed in (). Like Script Sentence [image '
-    'prompt] (second speaker dialogue only) Followed by next sentence [] () as same paragraph. The script '
-    'should tone like inspiring, use short sentence and easy to use frequent english words, '
-    'dont sound like AI, avoid obvious knowledge, start with catchy hook that is crazy about the news '
-    'but true and hook should be short and add emoji inside hook. Recollect what are the things '
-    'required in a script and write a script in above format and constraints as single paragraph. '
-    'Strictly Use atleast 3 emojis in each the script sentences alone but no emoji in image prompt and second '
-    'speaker that is no emoji inside [] and () dialogue. Output should be only a single paragraph without any '
-    'heading or response.Do not use any brackets in script sentence please and do not let any script sentence without '
-    '[] () including last sentence.')
+prompt_example = """Example : Environmental changes with {Flexed Biceps} Allu Arjun {Clapper Board}, you need to see this! {
+Glowing Star} [Image of Allu Arjun smiling] (people impressed) The superstar is not just acting; he’s inspiring 
+environmental change with a lot of money {Money Bag}. [Image of Environmental pollution] (environmental issues) {
+Seedling} On World Environment Day {Herb}, he shared a powerful message {Speech Balloon} urging us to save the Earth 
+{Earth Globe Europe-Africa}. [Image of Earth with greenery] (beautiful nature) His upcoming film {Clapper Board}, 
+Pushpa 2: The Rule {Crown}, is set to release on August 15, 2024 {Calendar}. [Image of Pushpa 2 poster] (movie 
+poster) It’s expected to be a blockbuster hit {Bomb} continuing the thrilling story {Movie Camera}. [Image of a 
+thrilling scene from Pushpa] (exciting film scene) {Glowing Star} Allu Arjun’s dedication to environmental {Herb} 
+causes is truly inspiring {Clapping Hands}. [Image of Allu Arjun planting a tree] (planting trees) Let’s follow his 
+lead {World Map} and make a positive {Heavy Plus Sign} impact. [Image of people taking eco-friendly actions] (people 
+taking eco-friendly actions)."""
+
+base_prompt = """You are an expert in Instagram reels script writer creating viral and shareable scripts
+with lot of emoji from given news. I am a script writer for a entertainment news channel
+named as Entertain Buddy who has mostly audience of age between 18 and 34 from India."""
+
+my_format_prompt = """Create a viral and shareable reels script with the above news in MY format.
+My format : The script should contain script sentence image prompt
+of that sentence in between sentences enclosed in [] and a generalized video prompt to search in pexels website
+ which is enclosed in (). Like Script Sentence [image
+prompt] (video prompt) Followed by next sentence [] () as same paragraph. The script
+should tone like inspiring, use short sentence and easy to use frequent english words,
+dont sound like AI, avoid obvious knowledge, start with catchy hook that is crazy about the news
+but true and hook should be short and add emoji inside hook. Recollect what are the things
+required in a script and write a script in above format and constraints as single paragraph.
+Strictly Use atleast 3 emojis in each the script sentences alone but no emoji in image prompt and second
+speaker that is no emoji inside [] and () dialogue. Output should be only a single paragraph without any
+heading or response.Do not use any brackets in script sentence please and do not let any script sentence without
+[] () including last sentence. Finally Strictly check these constraints in generated script :
+content in {} MUST be replaced by emoji without {} and Each sentence in the script sentence must have minimum of 3
+emojis and Each script sentence should have [image prompt] and (video prompt),
+especially the last sentence and Each sentence in script sentence should have 8 to 15
+words without obvious knowledge and Emoji should not present inside [] and (). Please Do not give {text} in generated script,
+Use actual emojis and then give me that generated script."""
 
 prompt_for_title = ". Give eye catching title with extreme emotions which is less 100 characters without emoji in 3 to 6 words\n"
-# prompt_for_content = ". You are the best Question Answer Framer who can re-write news to Questions and Answer with comparative examples for better understanding and related to a common man. Write 4 meaningful and short and relatable Questions With Answer using the above news in one paragraph. The Question should contain image prompt of that sentence in between sentences enclosed in [] and a very short dialogue for a second speaker who gives Answer for the question which is enclosed in (). Example, Can Selena Gomez and Benny Blanco’s romance get any hotter? [A cozy photo of Selena and Benny snuggled up] (They're setting the love bar sky-high!).Why is Selena Gomez sharing intimate moments on Instagram? [An affectionate snapshot of Selena and Benny] (To show off their sweet love story!).Are Selena Gomez and Benny Blanco the newest power couple? [A picture capturing Selena and Benny's adorable bond] (Their romance is stealing the spotlight!).What's making Selena Gomez's fans swoon on social media? [A heartwarming image of Selena and Benny together] (Seeing her so happy with Benny is melting hearts!). Question and answer in the pattern of Question [img] (sec speaker Answer with facts and comparative examples). Only make the first question more crazy and curious to hook the audience based on news But rest of the Questions and Answers to give more facts and comparative examples with positive voice. Question and answers are short in length with minimum 8 to maximum 12 words to make audience listen before they scroll  and make all 4 sentence one after other separated by '.' and without space as a single sentence.Tone is Very Simple english (15 years old) and friendly and more facts from news. Output formate is same as example (Single Paragraph)\n"
+
 if len(prompt) != 1:
-    prompt_for_content = ("You are an expert in Instagram reels script writer creating viral and shareable scripts "
-                          "with lot of emoji from given news. I am a script writer for a entertainment news channel "
-                          "named as Entertain Buddy who has mostly audience of age between 18 to 26 from India. "
-                          "Create a reels script with the above news in MY format." + my_format_prompt +
-                          "Example : environmental changes with {Flexed Biceps} Allu Arjun {Clapper Board}, "
-                          "you need to see this! {Glowing Star} [Image of Allu Arjun "
-                          "smiling] (Wow, that's impressive!) The superstar "
-                          "is not just acting; he's inspiring environmental "
-                          "change with a lot of money {Money Bag}. [Image "
-                          "of Environmental pollution] (Changes required in "
-                          "mandatory!) {Seedling} On World Environment Day "
-                          "{Herb}, he shared a powerful message {Speech "
-                          "Balloon} urging us to save the Earth {Earth "
-                          "Globe Europe-Africa}. [Image of Earth with "
-                          "greenery] (We should all listen!) His upcoming "
-                          "film {Clapper Board}, Pushpa 2: The Rule {"
-                          "Crown}, is set to release on August 15, "
-                          "2024 {Calendar}. [Image of Pushpa 2 poster] (I "
-                          "can't wait!) It's expected to be a blockbuster "
-                          "hit {Bomb} continuing the thrilling story {Movie "
-                          "Camera}. [Image of a thrilling scene from "
-                          "Pushpa] (Sounds amazing!) {Glowing Star} Allu "
-                          "Arjun's dedication to environmental {Herb} "
-                          "causes is truly inspiring {Clapping Hands}. ["
-                          "Image of Allu Arjun planting a tree] (What a "
-                          "role model!) Let's follow his lead {World Map} "
-                          "and make a positive {Heavy Plus Sign} impact. ["
-                          "Image of people taking eco-friendly actions] (We "
-                          "can do it!).Strictly consider text inside {} as "
-                          "emoji and generated script should have emoji ONLY."
-                          "use short sentences and consider hook also as a "
-                          "script sentence. Finally Strictly check these constraints in generated script : replace "
-                          "content in {} to emoji"
-                          "and Each sentence in the script sentence must have minimum of 3 "
-                          "emojis and Each script sentence should have [image prompt] and (second speaker), "
-                          "especially the last sentence and Each sentence in script sentence should have 8 to 15 "
-                          "words without obvious knowledge and Emoji should not present inside [] and () and replace content in {} to emoji "
-                                           "outside [] and (). Please Do not give {text} in generated script, "
-                                           "Use emojis and then give me that generated script.\n")
+    prompt_for_content = str(base_prompt + my_format_prompt + prompt_example).replace("\n"," ") + "\n"
 else:
-    prompt_for_content = (
-            "You are an expert in Instagram reels script writer creating viral and shareable scripts. I am a "
-            "script writer for a entertainment news named as Entertain Buddy who has mostly audience of age between 18 to 26 "
-            "from India. Create a reels script with my rough script idea in My format." +
-            prompt[0] + my_format_prompt + "Finally Strictly check these constraints in generated script : replace "
-                                           "content in {} to emoji and Each Emoji should be placed next to the related word"
-                                           "and Each sentence in the script sentence must have minimum of 3 "
-                                           "emojis and Each script sentence should have [image prompt] and (second "
-                                           "speaker),especially the last sentence and Each sentence in script "
-                                           "sentence should have 8 to 15 words without obvious knowledge and Emoji "
-                                           "should not present inside [] and () and replace content in {} to emoji "
-                                           "outside [] and (). Please Do not give {text} in generated script, "
-                                           "Use emojis and then give me the generated script.\n"
-    )
-    # prompt_for_hook = ". Formulate a compelling hook in 15 words with a negative tone for above news. If it's [negative aspect], engage with '[Related emotion] [related audience]? A critical issue demanding your attention.\n"
-prompt_for_hook = ". Begin with short story which is interesting,creative and related to the news in 15 words as hook.\n"
+    prompt_for_content = str(base_prompt + prompt[0] + my_format_prompt + prompt_example).replace("\n"," ") + "\n"
+
 prompt_for_hashtag = ". Give 5 POPULAR hashtags as SENTENCE like ' #abc #def #xyx #fgh #xlm '.\n"
 prompt_for_meme = ". Give a 3 to 7 worded sentence for meme. \n"
 list_of_prompt = [prompt_for_title, prompt_for_content, prompt_for_hashtag]

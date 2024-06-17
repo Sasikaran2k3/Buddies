@@ -8,9 +8,6 @@ date = "".join(str(datetime.date.today()).split("-"))
 f = open(os.path.dirname(__file__) + "//Data//" + date + "_script.txt", "r")
 content = f.readlines()
 
-f = open(os.path.dirname(__file__) + "//Data//" + date + "_speaker.txt", "r")
-speaker = f.readlines()
-
 
 stripped_content = ""
 
@@ -28,7 +25,4 @@ for i in range(len(content)):
                         speaker_wav=os.path.dirname(__file__) + "/Audio_train_Boy.wav")
     stripped_content = ""
     print(stripped_content)
-    if i < len(speaker) and i == len(content)-1:
-        tts.tts_to_file(text=speaker[i], file_path=path + "_" + str(i) + "sp2.wav", language='en',
-                        speaker_wav=os.path.dirname(__file__) + "/Audio_train_Girl.wav")
-        print(speaker[i])
+
